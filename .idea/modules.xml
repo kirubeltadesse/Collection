@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Irr_manage/Irr_manage.iml" filepath="$PROJECT_DIR$/../Irr_manage/Irr_manage.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/creating_form.iml" filepath="$PROJECT_DIR$/.idea/creating_form.iml" />
     </modules>
   </component>
