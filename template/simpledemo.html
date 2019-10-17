@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../css/canvas.css">
+<!--    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>-->
+
+    <script type="text/javascript" src="../js/canvas.js"></script>
+
+
+</head>
+<body>
+
+<div id="canvasDiv">
+    <canvas id="canvasInAPerfectWorld" width="489" height="220"  border = "black solid 1px"></canvas>
+</div>
+
+<div class="slidecontainer">
+    <p>slider for the value of the Radios</p>
+    <input type="range" min="0.00" max="500.00" value="0.0" class="slider" id="myRange">
+    <p>Value: <span id="demo"></span></p>
+    <script>
+        // slider
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value; // Display the default slider value
+
+
+        // Update the current slider value (each time you drag the slider handle)
+        slider.oninput = function() {
+            output.innerHTML = (this.value/100);
+        }
+    </script>
+</div>
+
+<!--    TODO: adding the plot in plotly-->
+
+
+
+</body>
+
+</html>

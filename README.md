@@ -14,3 +14,8 @@ https://getbootstrap.com/docs/3.4/javascript/#tabs
 STEP 7: Write the form code on both tab.
 
 STEP 8: Apply css
+
+Getting started with D3: https://www.tutorialsteacher.com/d3js 
+
+
+https://irrisat-cloud.appspot.com/api 

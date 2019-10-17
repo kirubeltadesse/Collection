@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Embedding Vega-Lite</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.3"></script>
+</head>
+<body>
+<div id="vis"></div>
+
+<script type="text/javascript">
+    var yourVlSpec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json",
+        "description": "A dual axis chart, created by setting y's scale resolution to `\"independent\"`",
+        "width": 400, "height": 300,
+        "data": {
+            "url": "data/weather.csv",
+            "format": {"type": "csv"}
+        },
+        "transform": [{"filter": "datum.location == \"Seattle\""}],
+        "encoding": {
+            "x": {
+                "field": "date",
+                "axis": {"format": "%b", "title": null},
+                "type": "temporal",
+                "timeUnit": "month"
+            }
+        },
+        "layer": [
+            {
+                "mark": {"opacity": 0.3, "type": "area", "color": "#85C5A6"},
+                "encoding": {
+                    "y": {
+                        "aggregate": "average",
+                        "field": "temp_max",
+                        "scale": {"domain": [0, 30]},
+                        "type": "quantitative",
+                        "axis": {"title": "Avg. Temperature (°C)", "titleColor": "#85C5A6"}
+                    },
+
+                    "y2": {
+                        "aggregate": "average",
+                        "field": "temp_min",
+                        "type": "quantitative"
+                    }
+                }
+            },
+            {
+                "mark": {"stroke": "#85A9C5", "type": "line", "interpolate": "monotone"},
+                "encoding": {
+                    "y": {
+                        "aggregate": "average",
+                        "field": "precipitation",
+                        "type": "quantitative",
+                        "axis": {"title": "Precipitation (inches)", "titleColor":"#85A9C5"}
+                    }
+                }
+            }
+        ],
+        "resolve": {"scale": {"y": "independent"}}
+    }
+    vegaEmbed('#vis', yourVlSpec);
+</script>
+</body>
+</html>

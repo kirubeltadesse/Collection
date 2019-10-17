@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D3 example</title>
+    <link rel="stylesheet" type="text/css" href="../css/d3styling.css">
+    <style>
+        .solid{
+            stroke:solid;
+        }
+
+        .dashed{
+            stroke-dasharray: 5,5;
+        }
+        path {
+            /*fill: none;*/
+            stroke: #000;
+            stroke-width: 1.5px;
+            stroke : "red";
+
+        }
+
+        line {
+            fill: none;
+            stroke: red;
+            stroke-width: 1.5px;
+        }
+
+        circle {
+            fill: red;
+        }
+
+        rect {
+            fill: none;
+            cursor: crosshair;
+            pointer-events: all;
+        }
+
+    </style>
+</head>
+<body>
+<!--    <h2>Lorem ipsum dolor This will work for me and I will master this in a very short time site. I don't think I am see-->
+<!--        the change as I should. I am not really sure if this is working properly I don't know how to debug this maybe using the inSpect will be a good ideas</h2>-->
+<!--    <ul></ul>-->
+    <div class = "main"></div>
+
+    <!-- Add a slider -->
+    <input type="range" name="mySlider" id=radius min="100" max="500" value="50">
+    <div>
+<!--        <div id="area2"></div>-->
+        <svg width="300px" height="300px"></svg>
+        <svg width="300px" height="300px" id="svg2"></svg>
+    </div>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script type="text/javascript" src="../js/custom.js"></script>
+
+</body>
+</html>

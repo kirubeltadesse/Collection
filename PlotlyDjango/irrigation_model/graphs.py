@@ -1,10 +1,14 @@
-from front_end import process_input
+# from front_end import process_input
 import plotly as py
 from plotly.offline import plot
 import plotly.graph_objs as go
 
 import pandas as pd
 import numpy as np
+
+
+# just
+import os
 
 # my_obj = data_input("2018-01-01", "2018-08-10", "94558",
 #                     "POLYGON((-122.331277 38.358624,-122.328230 38.359600,-122.327522 38.358119,-122.330526 38.357093,-122.331277 38.358624))",
@@ -13,8 +17,8 @@ import numpy as np
 # data = my_obj.get_cummulative()
 # print(data)
 
-def init(start, end, poly, zip, soil_type, irrigation_type):
-    return process_input.data_input(start, end, poly, zip, soil_type, irrigation_type)
+# def init(start, end, poly, zip, soil_type, irrigation_type):
+#     return process_input.data_input(start, end, poly, zip, soil_type, irrigation_type)
 
 def plot_Kc(data):
     data_Kc = [go.Scatter(x=data.index,
@@ -46,8 +50,13 @@ def plot_Kc(data):
     kcplot = ply.iplot(fig, output_type='div', include_plotlyjs=False)
     return kcplot
 
+def plot_Cropwateruse():
 
-def plot_Cropwateruse(data):
+
+    # importing data
+    data = pd.read_pickle(r'..\..\Irr_manage\front_end\data\data.pk')
+    # needs to read the data lockly
+
     trace1 = go.Scatter(
         x=data.index,
         y=data['Etc_values'], #[-self.n_days:],

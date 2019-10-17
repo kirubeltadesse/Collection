@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<!--
+    Author: Viswajeeet Balaji
+    Purdue University
+    Spring 2019. Big Ideas Research under Prof. David S Ebert
+    JSON Schema embedded HTML Irrigation Cost Calculator
+-->
+<head>
+    <meta charset="utf-8" />
+    <title>Big Ideas Cost Calculator</title>
+
+    <!--Importing the necessary librabries through CDN-->
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+    </script>
+</head>
+
+<body class="p-3 mb-2 bg-dark text-white">
+<!--<h1>-->
+<!--    <center>Big Ideas Irrigation Cost Calculator</center>-->
+<!--    <hr>-->
+<!--</h1>-->
+<div class="container p-3 mb-2 bg-secondary text-dark">
+    <div id='farm_details_form' class='col'></div><br>
+    <div id='cultural_costs_form' class='col'></div><br>
+    <div id='harvest_cost_form' class='col'></div><br>
+    <button id='submit' type="button" class="btn btn-success">Submit Your Form Details</button>
+</div>
+
+<hr>
+<!--<center><i> Viswajeeet Balaji, Purdue University </i></center>-->
+</body>
+<script>
+    //Define the farm details form schema
+    farm_schema = {
+        "title": "Farm Details",
+        "type": "object",
+        "options": {
+            "collapsed": "true"
+        },
+        "basicCategoryTitle": "Area",
+        "format": "categories",
+        "required": [
+            "area",
+            "labor rate",
+            "yield"
+        ],
+        "properties": {
+            "area": {
+                "type": "number",
+                "title": "Total farm area",
+                "minimum": 0,
+                "default": 3000
+            },
+            "labor rate": {
+                "type": "object",
+                "required": ["non_machine", "machine"],
+                "title": "Labor Rate Details",
+                "properties": {
+                    "non_machine": {
+                        "type": "number",
+                        "title": "Labor Rate - Non machine ($/hr)",
+                        "default": 12,
+                        "minimum": 0
+                    },
+                    "machine": {
+                        "type": "number",
+                        "title": "Labor Rate - Machine ($/hr)",
+                        "default": 18,
+                        "minimum": 0,
+                    }
+                }
+            },
+            "yield": {
+                "type": "object",
+                "title": "Annual Yield Details",
+                "required": ["annual_yield", "returns"],
+                "properties": {
+                    "annual_yield": {
+                        "type": "number",
+                        "value": 5,
+                        "title": "Annual Yield (tons/acre)"
+                    },
+                    "returns": {
+                        "type": "number",
+                        "default": 600,
+                        "title": "Annual Returns ($/ton)"
+                    }
+                }
+            },
+            "fuel rate": {
+                "type": "object",
+                "title": "Fuel Rate Details",
+                "required": ["gas", "diesel"],
+                "properties": {
+                    "gas": {
+                        "type": "number",
+                        "default": 2.7,
+                        "minimum": 0,
+                        "title": "Gas - $/gallon"
+                    },
+                    "diesel": {
+                        "type": "number",
+                        "default": 2.3,
+                        "minimum": 0,
+                        "title": "Diesel - $/gallon"
+                    }
+                }
+            },
+            "irrigation system": {
+                "type": "object",
+                "title": "Irrigation Systems Cost",
+                "properties": {
+                    "irr_type": {
+                        "title": "Irrigation System Type",
+                        "type": "string",
+                        "enum": ["Drip Irrigation", "Sprinkler Irrigation", "Furrow Irrigation"],
+                        "default": "Drip Irrigation",
+                    },
+                    "irr_price": {
+                        "type": "number",
+                        "minimum": 0,
+                        "default": 550,
+                        "title": "Irrigation System Price - $/acre"
+                    }
+                }
+            }
+        }
+    } //end of farm_schema
+
+    cultural_costs_schema = {
+        "type": "object",
+        "options": {
+            "collapsed": "true"
+        },
+        "basicCategoryTitle": "Human Labor Cost",
+        "format": "categories",
+        "title": "Cultural Cost Details",
+        "add": ["prune_hours", "winter_tie", "fertigate", "shoot_removal", "trim_vines", "pest_control", "irrigation_cost"],
+        "properties": {
+            "prune_hours": {
+                "type": "number",
+                "default": 10,
+                "minimum": 0,
+                "title": "Prune Hours",
+                "multiplier": "non-machine"
+            },
+            "winter_tie": {
+                "type": "number",
+                "default": 10,
+                "title": "Winter Tie hours",
+                "multiplier": "non-machine"
+            },
+            "fertigate": {
+                "type": "number",
+                "default": 10,
+                "title": "Fertigate hours",
+                "multiplier": "non-machine"
+            },
+            "shoot_removal": {
+                "type": "number",
+                "default": 10,
+                "title": "Shoot removal/positioning hours",
+                "multiplier": "non-machine"
+            },
+            "trim_vines": {
+                "type": "number",
+                "default": 10,
+                "title": "Vine trimming hours",
+                "multiplier": "non-machine"
+            },
+            "pest_control": {
+                "type": "number",
+                "default": 10,
+                "title": "Pest control hours",
+                "multiplier": "non-machine"
+            },
+            "irrigation_cost": {
+                "type": "object",
+                "options": {
+                    "disable_collapse": "true"
+                },
+                "title":"Irrigation Cost",
+                "add": ["water_pumped", "irrigation_labor"],
+                "properties": {
+                    "water_pumped": {
+                        "type": "number",
+                        "default": 3,
+                        "minimum": 0,
+                        "title": "Water pumped (Acre-foot/acre)"
+                    },
+                    "water_pumping_price": {
+                        "type": "number",
+                        "default": 5,
+                        "minimum": 0,
+                        "title": "Water pumping price $/acre-foot"
+                    },
+                    "irrigation_labor": {
+                        "type": "number",
+                        "title": "Irrigation Labor (hours)",
+                        "default": 4,
+                        "minimum": 0
+                    }
+                }
+            }
+        }
+    }
+
+    harvest_cost_schema = {
+        "title": "Harvest Cost",
+        "type": "object",
+        "options": {
+            "collapsed": "true"
+        },
+        "add": ["harvest_labor"],
+        "properties": {
+            "harvest_labor": {
+                "title": "Harvest Labour (hours)",
+                "type": "number",
+                "default": 10,
+                "multiplier": "non_machine"
+            }
+        }
+    }
+
+    //Set the UI for the form
+    JSONEditor.defaults.theme = 'bootstrap4';
+    JSONEditor.defaults.iconlib = 'fontawesome4';
+
+    // Initialize the farm_details_form with a JSON schema
+    var farm_details_form = new JSONEditor(document.getElementById('farm_details_form'), {
+        schema: farm_schema,
+        no_additional_properties: false, //To be able to add, set to false
+        disable_edit_json: true,
+        disable_properties: false
+    });
+
+    // Initialize the farm_details_form with a JSON schema
+    var cultural_costs_form = new JSONEditor(document.getElementById('cultural_costs_form'), {
+        schema: cultural_costs_schema,
+        no_additional_properties: false,
+        disable_properties: false,
+        disable_edit_json: true
+    });
+
+    // Initialize the harvest_form with a JSON schema
+    var harvest_form = new JSONEditor(document.getElementById('harvest_cost_form'), {
+        schema: harvest_cost_schema,
+        no_additional_properties: false,
+        disable_properties: false,
+        disable_edit_json: true
+    });
+
+    // Link the submit button to log to the console
+    document.getElementById('farm_details_form_submit').addEventListener('click', function() {
+        // Get the value from the editor
+        console.log(farm_details_form.getValue());
+        console.log(cultural_costs_form.getValue());
+        console.log(harvest_form.getValue());
+    });
+
+</script>
+
+</html>
